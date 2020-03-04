@@ -16,6 +16,7 @@ RUN chmod +x make.sh
 RUN ./make.sh
 
 RUN pip install smbus
+RUN pip3 install adafruit-circuitpython-sgp30
 
 WORKDIR /usr/src/app
 COPY ./scripts ./scripts

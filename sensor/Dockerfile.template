@@ -17,6 +17,8 @@ RUN ./make.sh
 
 RUN pip install smbus
 RUN pip install w1thermsensor
+RUN pip3 install adafruit-circuitpython-sgp30
+RUN pip3 install RPI.GPIO adafruit-blinka
 
 WORKDIR /usr/src/app
 COPY ./scripts ./scripts

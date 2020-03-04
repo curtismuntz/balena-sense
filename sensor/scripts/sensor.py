@@ -11,6 +11,7 @@ import json
 from bme680 import BME680
 from w1therm import W1THERM
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from sgp30 import SGP30
 
 class balenaSense():
     readfrom = 'unset'
@@ -71,6 +72,14 @@ class balenaSense():
                 self.readfrom = '1-wire'
                 print('Using 1-wire for readings (temperature only)')
 
+        if self.readfrom == 'unset':
+            try:
+                self.sensor = SGP30()
+                print("SGP30 serial #", self.sensor.get_id())
+                self.readfrom = 'sgp30'
+            except:
+                print('Failed to spin up sgp30 sensor')
+
         # If this is still unset, no sensors were found; quit!
         if self.readfrom == 'unset':
             print('No suitable sensors found! Exiting.')
@@ -95,6 +104,9 @@ class balenaSense():
             # if there's an altitude set (in meters), then apply a barometric pressure offset
             altitude = float(os.environ['BALENASENSE_ALTITUDE'])
             measurements[0]['fields']['pressure'] = measurements[0]['fields']['pressure'] * (1-((0.0065 * altitude) / (measurements[0]['fields']['temperature'] + (0.0065 * altitude) + 273.15))) ** -5.257
+
+        if os.environ.get('BALENASENSE_CO2_OFFSET') != None:
+            measurements[0]['fields']['eCO2'] = measurements[0]['fields']['eCO2'] + float(os.environ['BALENASENSE_CO2_OFFSET'])
 
         return measurements
 
