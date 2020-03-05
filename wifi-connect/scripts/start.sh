@@ -26,7 +26,7 @@ if [ $? -eq 0 ]; then
     printf 'Skipping WiFi Connect\n'
 else
     printf 'Starting WiFi Connect\n'
-    ./wifi-connect
+    ./wifi-connect --portal-listening-port 45454
 fi
 
 # Start your application here.
